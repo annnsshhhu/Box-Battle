@@ -1,0 +1,271 @@
+#include<iostream>
+#include <cstdlib>
+#include <ctime>
+#include<vector>
+using namespace std;
+void displayBoard(vector<vector<char>>& board){
+    for(int j=0;j<board[0].size();j++){
+            cout<<"--";
+        }
+        cout<<endl;
+    for(int i=0;i<board.size();i++){
+        for(int j=0;j<board[i].size();j++){
+            cout<<board[i][j];
+            if(j<board[i].size()-1){
+                cout<<"|";
+            }
+        }
+        cout<<endl;
+        for(int j=0;j<board[i].size();j++){
+            cout<<"--";
+        }
+        cout<<endl;
+    }
+}
+
+int calculateScore(vector<vector<char>>& board, char ch){
+    int score = 0;
+    for(int i=0;i<board.size()-1;i++){
+        for(int j=0;j<board[0].size()-1;j++){
+            if((board[i][j] == ch) && (board[i][j+1] == ch) && (board[i+1][j] == ch) && (board[i+1][j+1] == ch)){
+                score ++;
+            }
+        }
+    }
+    return score;
+}
+
+bool changeInScore(vector<vector<char>>& board,char ch,int row,int col){
+    if(row == 0 && col == 0){if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col+1] == ch) && (board[row+1][col+1] == ch)){
+        return true;
+    }}
+    if(row == 0 && col == board[0].size()-1){if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col-1] == ch) && (board[row+1][col-1] == ch)){
+        return true;
+    }}
+    if(row == board.size()-1 && col == 0){if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col+1] == ch) && (board[row-1][col+1] == ch)){
+        return true;
+    }}
+    if(row == board.size()-1 && col == board[0].size()-1){if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col-1] == ch) && (board[row-1][col-1] == ch)){
+        return true;
+    }}
+    if(col == 0 && row>=1 && row<=board.size()-2){
+        if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col+1] == ch) && (board[row+1][col+1] == ch)){
+        return true;
+        }
+        if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col+1] == ch) && (board[row-1][col+1] == ch)){
+        return true;
+    }
+    }
+    else if(col == board[0].size()-1 && row>=1 && row<=board.size()-2){
+    if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col-1] == ch) && (board[row-1][col-1] == ch)){
+        return true;
+    }
+    if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col-1] == ch) && (board[row+1][col-1] == ch)){
+        return true;
+    }
+    }
+    else if(row == 0 && col>=1 && col<= board[0].size()-2){
+        if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col+1] == ch) && (board[row+1][col+1] == ch)){
+        return true;
+    }
+    if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col-1] == ch) && (board[row+1][col-1] == ch)){
+        return true;
+    }
+    }
+    else if(row == board.size()-1 && col>=1 && col<= board[0].size()-2){
+        if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col+1] == ch) && (board[row-1][col+1] == ch)){
+        return true;
+    }
+    if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col-1] == ch) && (board[row-1][col-1] == ch)){
+        return true;
+    }
+    }
+    else if(row>=1 && row<=board.size()-2 && col>= 1 && col<=board[0].size()-2){
+    if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col+1] == ch) && (board[row+1][col+1] == ch)){
+        return true;
+    }
+    if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col+1] == ch) && (board[row-1][col+1] == ch)){
+        return true;
+    }
+    if((board[row][col] == ch) && (board[row-1][col] == ch) && (board[row][col-1] == ch) && (board[row-1][col-1] == ch)){
+        return true;
+    }
+    if((board[row][col] == ch) && (board[row+1][col] == ch) && (board[row][col-1] == ch) && (board[row+1][col-1] == ch)){
+        return true;
+    }
+    }
+    return false;
+}
+bool checkIsBoardEmpty(vector<vector<char>>& board){
+    int clarity = 0;
+    for(int i=0;i<board.size();i++){
+        for(int j=0;j<board[i].size();j++){
+            if(board[i][j] != ' '){
+                clarity++;
+            }
+            else{
+                clarity = -1;
+                return true;
+            }
+        }
+    }
+    if(clarity == (board.size()*board[0].size())){
+        return false;
+    }
+    return true;
+}
+int main(){
+    vector<vector<char>>board(10,vector<char>(10,' '));
+    cout<<"Welcome to Box Battle : "<<endl;
+    displayBoard(board);
+    cout<<endl<<"Which version you want to play : "<<endl;
+    cout<<"1.Playing as a kid"<<endl;
+    cout<<"2.Playing with a friend"<<endl;
+    int choice;
+    cout<<"Enter choice : ";
+    cin>>choice;
+    if(choice == 1){
+        int playerScore,computerScore;
+    for(int k=0; ;k++){           //if the board is still empty
+        int iX,jX;
+        for(int n=0; ;n++){       //if player awards a point
+        for(int m=0; ;m++){      //for player to mark on empty position
+        cout<<"PlayerX, Enter the postition 0th index row,coulmn : ";
+        cin>>iX>>jX;
+        if(board[iX][jX] == ' '){
+            board[iX][jX] = 'X';
+            break;
+        }
+        }
+        cout<<endl;
+        displayBoard(board);
+        cout<<endl;
+        playerScore = calculateScore(board,'X');
+        computerScore = calculateScore(board,'O');
+        cout<<"Your score : "<<playerScore;
+        cout<<", Computer score : "<<computerScore<<endl;
+        if(!changeInScore(board,'X',iX,jX)){
+            break;
+        }
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        }
+        
+        
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        
+        
+        int iO,jO;
+        for(int n=0; ;n++){            //if device earns a point
+            for(int m=0; ;m++){        //for device to mark on empty postition
+                iO = rand()% board.size();
+                jO = rand()% board[0].size();
+                if(board[iO][jO] == ' '){
+                    board[iO][jO] = 'O';
+                    break;
+                }
+            }
+            cout<<endl;
+        displayBoard(board);
+        cout<<endl;
+        playerScore = calculateScore(board,'X');
+        computerScore = calculateScore(board,'O');
+        cout<<"Your score : "<<playerScore;
+        cout<<", Computer score : "<<computerScore<<endl;
+        if(!changeInScore(board,'O',iO,jO)){
+            break;
+        }
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        }
+        
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        
+        
+    }
+    if(playerScore > computerScore){
+        cout<<"You Won";
+    }
+    else if(playerScore < computerScore){
+        cout<<"You lost";
+    }
+    else{
+        cout<<"Draw";
+    }
+    }
+    if(choice == 2){
+        int playerXScore,playerOScore;
+        for(int k=0; ;k++){           
+        int iX,jX;
+        for(int n=0; ;n++){       
+        for(int m=0; ;m++){      
+        cout<<"PlayerX, Enter the postition 0th index row,coulmn : ";
+        cin>>iX>>jX;
+        if(board[iX][jX] == ' '){
+            board[iX][jX] = 'X';
+            break;
+        }
+        }
+        cout<<endl;
+        displayBoard(board);
+        cout<<endl;
+        playerXScore = calculateScore(board,'X');
+        playerOScore = calculateScore(board,'O');
+        cout<<"Player X score : "<<playerXScore;
+        cout<<", Player 0 score : "<<playerOScore<<endl;
+        if(!changeInScore(board,'X',iX,jX)){
+            break;
+        }
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        }
+        
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        int iO,jO;
+        for(int n=0; ;n++){       
+        for(int m=0; ;m++){ 
+        cout<<"PlayerO, Enter the postition 0th index row,coulmn : ";
+        cin>>iO>>jO;
+        if(board[iO][jO] == ' '){
+            board[iO][jO] = 'O';
+            break;
+        }
+        }
+        cout<<endl;
+        displayBoard(board);
+        cout<<endl;
+        playerXScore = calculateScore(board,'X');
+        playerOScore = calculateScore(board,'O');
+        cout<<"Player X score : "<<playerXScore;
+        cout<<", Player 0 score : "<<playerOScore<<endl;
+        if(!changeInScore(board,'O',iO,jO)){
+            break;
+        }
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        }
+        if(!checkIsBoardEmpty(board)){
+            break;
+        }
+        }
+        if(playerXScore > playerOScore){
+        cout<<"Player X won";
+    }
+    else if(playerXScore < playerOScore){
+        cout<<"Player O won";
+    }
+    else{
+        cout<<"Draw";
+    }
+    }
+}
