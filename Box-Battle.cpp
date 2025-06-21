@@ -121,7 +121,7 @@ void randomized(vector<vector<char>>& board,vector<vector<vector<char>>>& subBoa
         *sum = *sum + 1;
         board[r][c] = 'X';
         makingSubBox(board,subBoard);
-        if(possibleScore(subBoard,pos_subBoard,row,col) && (*sum <= emptySpace(board))){
+        if(possibleScore(subBoard,pos_subBoard,row,col) && (*sum <= (emptySpace(board) * emptySpace(board)))){
             board[r][c] = ' ';
             makingSubBox(board,subBoard);
             
@@ -191,7 +191,7 @@ int main(){
     srand(time(NULL));
     cout<<endl<<"On which grid do you want to play : "<<endl;
 
-    cout<<endl<<"Enter choice (grid size should be greater than 2): ";
+    cout<<endl<<"Enter choice (grid size should be greater than 3): ";
     cin>>size;
     
     vector<vector<char>>board(size, vector<char>(size, ' '));
